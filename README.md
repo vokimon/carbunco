@@ -1,6 +1,6 @@
 # Carbunco
 
-Carbunco is a gas stations searcher in Spain.
+Carbunco is a gas stations searcher for Spain.
 
 You obtain a list of gas stations which are the cheaper at a certain distance,
 so depending on how far you want to go, you will get cheaper prices.
