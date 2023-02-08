@@ -1,0 +1,7 @@
+requests
+yamlns
+geopy
+click
+pyside6
+qgmap
+consolemsg
