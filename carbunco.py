@@ -41,7 +41,7 @@ class Carbunco:
         today=datetime.date.today()
         if self._stations:
             return self._stations
-        cachefile = Path(f'stations-{today}.yaml')
+        cachefile = Path('data')/f'stations-{today}.yaml'
         if cachefile.exists():
             step(f"Usando datos de {cachefile}")
             self._stations = ns.load(cachefile).data
