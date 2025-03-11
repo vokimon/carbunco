@@ -28,9 +28,9 @@ MDScreen:
                             hint_text: "Address"
 
                         MDDropDownItem:
-                            id: dropdown_item
+                            id: product_selector
                             size_hint: [1.0, None]
-                            items: ["Gasoleo A", "Gasoleo B"]
+                            text: "Gasoleo A"
                             dropdown_bg: [1, 1, 1, 1]
                             on_release: app.open_product_dropdown()
 
@@ -49,8 +49,6 @@ MDScreen:
                                     tertiary_text: "fit more text than usual"
                                     IconRightWidget:
                                         icon: "plus"
-                Tab:
-                    title: "Lista"
                 Tab:
                     title: "Mapa"
                     MapView:

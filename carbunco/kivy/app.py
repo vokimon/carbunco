@@ -82,8 +82,9 @@ class CarbuncoApp(App):
         
         from kivymd.uix.label import MDLabel
         from kivymd.uix.list import ThreeLineListItem
-        location = self.engine.locate("Sant Joan Despí")
-        product = "Gasoleo A"
+        search = self.root.ids.address.text
+        location = self.engine.locate(search)
+        product = self.root.ids.product_selector.text
         print(dir(self.root))
         print(self.root.ids)
         self.root.ids.stationlist.clear_widgets()
@@ -99,13 +100,13 @@ class CarbuncoApp(App):
             self.root.ids.stationlist.add_widget(item)
 
     def product_selected(self, i, product):
-        self.root.ids.dropdown_item.text = product
+        self.root.ids.product_selector.text = product
 
     def open_product_dropdown(self):
         from kivymd.uix.menu import MDDropdownMenu
         from functools import partial
         self.menu = MDDropdownMenu(
-            caller=self.root.ids.dropdown_item,
+            caller=self.root.ids.product_selector,
             items=[
                 dict(
                     text = product,
