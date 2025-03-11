@@ -44,12 +44,12 @@ class Carbunco:
         cachefile = Path('data')/f'stations-{today}.yaml'
         cachefile.parent.mkdir(exist_ok=True, parents=True)
         if cachefile.exists():
-            step(f"Usando datos de {cachefile}")
+            #step(f"Usando datos de {cachefile}")
             self._stations = ns.load(cachefile).data
             self.updateProducts()
-            step(f"Cache cargada")
+            #step(f"Cache cargada")
             return self._stations
-        step("Descargando datos del Ministerio")
+        #step("Descargando datos del Ministerio")
         self.reloadPrices()
         ns(data=self._stations).dump(cachefile)
         return self._stations
@@ -59,7 +59,7 @@ class Carbunco:
 
     def locate(self, place):
         geocode = Geocoder(user_agent=__name__).geocode(place)
-        step(f"Buscando estaciones de servicio baratas cerca de {geocode.address}")
+        #step(f"Buscando estaciones de servicio baratas cerca de {geocode.address}")
         return geocode.latitude, geocode.longitude
 
     def route(self, from_, to):

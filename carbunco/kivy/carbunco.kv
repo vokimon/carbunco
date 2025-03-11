@@ -1,9 +1,9 @@
 #:import toast kivymd.toast.toast
+#:import MapView kivy_garden.mapview
 
 MDScreen:
     AnchorLayout:
         anchor_y: 'top'
-        padding: 5
         MDBoxLayout:
             id: "carbunco"
             pos_hint: {'top': 1.0}
@@ -13,36 +13,51 @@ MDScreen:
                 type: "top"
                 title: "Carbunco"
                 right_action_items: [ [ 'refresh' ]]
+            
 
-            MDLabel:
-                text: "¿Cómo de lejos quieres ir para consegur carburante más barato?"
-                size_hint_y: None
+            MDTabs:
+                align: "center"
+                Tab:
+                    title: "Cerca"
 
-            MDTextField:
-                id: address
-                hint_text: "Address"
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        padding: 10
+                        MDTextField:
+                            id: address
+                            hint_text: "Address"
 
-            MDSegmentedControl:
-                pos_hint: {"center_x": .5, "center_y": .5}
-                md_bg_color: "brown"
+                        MDDropDownItem:
+                            id: dropdown_item
+                            size_hint: [1.0, None]
+                            items: ["Gasoleo A", "Gasoleo B"]
+                            dropdown_bg: [1, 1, 1, 1]
+                            on_release: app.open_product_dropdown()
 
-                MDSegmentedControlItem:
-                    text: "Gasoil"
+                        MDRaisedButton:
+                            id: searchbutton
+                            pos_hint: {'center_x': 0.5}
+                            text: "Search"
+                            on_press: app.search_stations()
 
-                MDSegmentedControlItem:
-                    text: "Gasolina 98"
+                        MDScrollView:
+                            MDList:
+                                id: stationlist
+                                ThreeLineAvatarIconListItem:
+                                    text: "Three-line item"
+                                    secondary_text: "This is a multi-line label where you can"
+                                    tertiary_text: "fit more text than usual"
+                                    IconRightWidget:
+                                        icon: "plus"
+                Tab:
+                    title: "Lista"
+                Tab:
+                    title: "Mapa"
+                    MapView:
+                        zoom: 11
+                        lat: 50.6394
+                        lon: 3.057
 
-                MDSegmentedControlItem:
-                    text: "All"
-
-            MDRaisedButton:
-                pos_hint: {'right': 1.0}
-                text: "Search"
-                id: "searchbutton"
-
-            Widget:
-
- 
 
 
 

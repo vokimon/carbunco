@@ -4,6 +4,9 @@ from kivymd.uix.textfield import MDTextField
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.floatlayout import MDFloatLayout
+from kivymd.uix.scrollview import MDScrollView
+from kivymd.uix.tab import MDTabs, MDTabsBase
 from kivy.uix.behaviors.knspace import KNSpaceBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.properties import ListProperty
@@ -58,18 +61,60 @@ class StationList(MDDataTable):
     def fed_station_data(self, stations):
         ""
 
+class Tab(MDFloatLayout, MDTabsBase):
+    pass
+
 class CarbuncoApp(App):
     products = ListProperty(["Gasofa","Gasoil"])
 
     def __init__(self, engine, **kwds):
         super().__init__(
             kv_file='carbunco/kivy/carbunco.kv',
-            title="Carbuncazo",
+            title="Carbunco",
             **kwds
         )
         self.engine = engine
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Teal"
+        self.engine.stations # trigger load
+
+    def search_stations(self):
+        
+        from kivymd.uix.label import MDLabel
+        from kivymd.uix.list import ThreeLineListItem
+        location = self.engine.locate("Sant Joan Despí")
+        product = "Gasoleo A"
+        print(dir(self.root))
+        print(self.root.ids)
+        self.root.ids.stationlist.clear_widgets()
+        for station in self.engine.cheapQuest(
+            locations = [location],
+            product = product,
+        ):
+            item = ThreeLineListItem(
+                text=f"{station['Precio '+product]} €/l {station['Distancia']:.2f} km - {station['Rótulo']}",
+                secondary_text=f"{station['Provincia']} {station['Localidad']}",
+                tertiary_text=f"{station['Dirección']}",
+            )
+            self.root.ids.stationlist.add_widget(item)
+
+    def product_selected(self, i, product):
+        self.root.ids.dropdown_item.text = product
+
+    def open_product_dropdown(self):
+        from kivymd.uix.menu import MDDropdownMenu
+        from functools import partial
+        self.menu = MDDropdownMenu(
+            caller=self.root.ids.dropdown_item,
+            items=[
+                dict(
+                    text = product,
+                    on_release = partial(self.product_selected, i, product),
+                )
+                for i, product in enumerate(self.engine.products)
+            ],
+        )
+        self.menu.open()
 
 
     def show_products(self):

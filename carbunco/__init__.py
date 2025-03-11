@@ -52,6 +52,8 @@ def carbunco(query, brands, target=None, kivy=False):
     engine = Carbunco()
 
     if kivy:
+        import sys
+        sys.argv.remove('--kivy')
         from .kivy.app import app
         app(engine)
         return
