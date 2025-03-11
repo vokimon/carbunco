@@ -93,7 +93,7 @@ class CarbuncoApp(App):
             product = product,
         ):
             item = ThreeLineListItem(
-                text=f"{station['Precio '+product]} €/l {station['Distancia']:.2f} km - {station['Rótulo']}",
+                text=f"[color=ff8888]{station['Precio '+product]} €/l[/color] [color=44ff33]{station['Distancia']:.2f} km[/color] {station['Rótulo']}",
                 secondary_text=f"{station['Provincia']} {station['Localidad']}",
                 tertiary_text=f"{station['Dirección']}",
             )
