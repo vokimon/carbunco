@@ -1,0 +1,48 @@
+#:import toast kivymd.toast.toast
+
+MDScreen:
+    AnchorLayout:
+        anchor_y: 'top'
+        padding: 5
+        MDBoxLayout:
+            id: "carbunco"
+            pos_hint: {'top': 1.0}
+            orientation: "vertical"
+
+            MDTopAppBar:
+                type: "top"
+                title: "Carbunco"
+                right_action_items: [ [ 'refresh' ]]
+
+            MDLabel:
+                text: "¿Cómo de lejos quieres ir para consegur carburante más barato?"
+                size_hint_y: None
+
+            MDTextField:
+                id: address
+                hint_text: "Address"
+
+            MDSegmentedControl:
+                pos_hint: {"center_x": .5, "center_y": .5}
+                md_bg_color: "brown"
+
+                MDSegmentedControlItem:
+                    text: "Gasoil"
+
+                MDSegmentedControlItem:
+                    text: "Gasolina 98"
+
+                MDSegmentedControlItem:
+                    text: "All"
+
+            MDRaisedButton:
+                pos_hint: {'right': 1.0}
+                text: "Search"
+                id: "searchbutton"
+
+            Widget:
+
+ 
+
+
+
