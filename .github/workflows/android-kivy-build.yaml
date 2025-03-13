@@ -1,4 +1,4 @@
-name: Build kivy based apk
+name: Build Android (kivy version)
 
 on:
   release:
@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Cache Buildozer global directory
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: .buildozer_global
         key: buildozer-global-${{ hashFiles('test_app/buildozer.spec') }} # Replace with your path
