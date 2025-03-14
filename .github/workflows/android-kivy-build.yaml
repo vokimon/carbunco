@@ -21,13 +21,20 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .buildozer_global
-        key: buildozer-global-${{ hashFiles('./buildozer.spec') }} # Replace with your path
+        key: buildozer-global-${{ hashFiles('./buildozer.spec') }}
 
+
+    - name: Missing dependencies
+      run:
+        wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+        sudo apt install ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
+        python3 -m pip install libtool
+        python3 -m pip install docwriter
 
     - name: Build APK
       uses: digreatbrian/buildozer-action@v2
       with:
-        python-version: 3.8
+        python-version: 3.11
         buildozer-cmd: buildozer -v android debug
 #    - name: Build with Buildozer
 #      uses: ArtemSBulgakov/buildozer-action@v1
