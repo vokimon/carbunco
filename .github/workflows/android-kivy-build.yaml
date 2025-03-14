@@ -9,7 +9,7 @@ on:
       - '.*-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
-  publish:
+  build-android:
     runs-on: ubuntu-latest
     name: Generates apk as artifact
     steps:
@@ -28,7 +28,7 @@ jobs:
       id: buildozer
       with:
         command: buildozer android debug
-        buildozer_version: stable
+        buildozer_version: latest
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
