@@ -19,7 +19,7 @@ class Carbunco:
     def __init__(self):
         self._stations = None
 
-    def reloadPrices(self):
+    def download_prices(self):
         response = requests.get('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/')
         data = response.json()
         print(data['Nota'])
@@ -57,7 +57,7 @@ class Carbunco:
             #step(f"Cache cargada")
             return self._stations
         #step("Descargando datos del Ministerio")
-        self.reloadPrices()
+        self.download_prices()
         ns(data=self._stations).dump(datafile)
         return self._stations
 

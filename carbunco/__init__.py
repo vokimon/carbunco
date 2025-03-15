@@ -41,7 +41,7 @@ def carbunco(query, brands, target=None, qt=True):
 
     if brands:
         engine = Carbunco()
-        engine.reloadPrices()
+        engine.download_prices()
         pricestable=engine.pricesByBrand('Gasoleo A')
         print('\n'.join(
             '\t'.join(x for x in l)
