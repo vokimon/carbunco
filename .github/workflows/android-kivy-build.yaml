@@ -23,13 +23,16 @@ jobs:
         path: .buildozer_global
         key: buildozer-global-${{ hashFiles('./buildozer.spec') }}
 
-
     - name: Missing dependencies
       run: |
         wget http://security.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
         sudo apt install ./libtinfo5_6.3-2ubuntu0.1_amd64.deb
         python3 -m pip install libtool
         python3 -m pip install docwriter
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+
 
     - name: Build APK
       uses: digreatbrian/buildozer-action@v2
