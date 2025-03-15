@@ -88,10 +88,10 @@ class CarbuncoApp(App):
         print(dir(self.root))
         print(self.root.ids)
         self.root.ids.stationlist.clear_widgets()
-        for station in self.engine.cheapQuest(
+        for station in reversed(list(self.engine.cheapQuest(
             locations = [location],
             product = product,
-        ):
+        ))):
             item = ThreeLineListItem(
                 text=f"[color=ffff88]{station['Precio '+product]} €/l[/color] [color=44ff33]{station['Distancia']:.2f} km[/color] {station['Rótulo']}",
                 secondary_text=f"{station['Dirección']}",
