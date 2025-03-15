@@ -13,9 +13,9 @@ def float_es(x):
 @click.command()
 @click.option('--brands', is_flag=True)
 @click.option('--target')
-@click.option('--kivy', is_flag=True)
+@click.option('--qt', is_flag=True)
 @click.argument('query', nargs=-1)
-def carbunco(query, brands, target=None, kivy=False):
+def carbunco(query, brands, target=None, qt=True):
     if query:
         product = 'Gasolina 95 E5'
         product = 'Gasoleo A'
@@ -51,15 +51,15 @@ def carbunco(query, brands, target=None, kivy=False):
 
     engine = Carbunco()
 
-    if kivy:
+    if qt:
         import sys
-        sys.argv.remove('--kivy')
-        from .kivy.app import app
-        app(engine)
+        sys.argv.remove('--qt')
+        from .qt import qtapp
+        qtapp(engine)
         return
 
-    from .qt import qtapp
-    qtapp(engine)
+    from .kivy.app import app
+    app(engine)
 
 
 
