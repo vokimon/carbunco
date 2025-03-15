@@ -39,25 +39,27 @@ class Carbunco:
 
     @property
     def stations(self):
-        import datetime
-        today=datetime.date.today()
         if self._stations:
             return self._stations
-        cachefile = Path('data')/f'stations-{today}.yaml'
-        cachefile.parent.mkdir(exist_ok=True, parents=True)
-        if cachefile.exists():
-            #step(f"Usando datos de {cachefile}")
-            self._stations = ns.load(cachefile).data
+
+        import datetime
+        import appdirs
+        author = 'vokimon'
+        appname = 'carbunco'
+        datadir = Path(appdirs.user_data_dir(appname, author))
+        today=datetime.date.today()
+        datafile = datadir / f'stations-{today}.yaml'
+        datadir.mkdir(exist_ok=True, parents=True)
+        if datafile.exists():
+            #step(f"Usando datos de {datafile}")
+            self._stations = ns.load(datafile).data
             self.updateProducts()
             #step(f"Cache cargada")
             return self._stations
         #step("Descargando datos del Ministerio")
         self.reloadPrices()
-        ns(data=self._stations).dump(cachefile)
+        ns(data=self._stations).dump(datafile)
         return self._stations
-
-
-
 
     def locate(self, place):
         geocode = Geocoder(user_agent=__name__).geocode(place)
