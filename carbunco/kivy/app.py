@@ -95,7 +95,7 @@ class CarbuncoApp(App):
             item = ThreeLineListItem(
                 text=f"[color=ffff88]{station['Precio '+product]} €/l[/color] [color=44ff33]{station['Distancia']:.2f} km[/color] {station['Rótulo']}",
                 secondary_text=f"{station['Dirección']}",
-                tertiary_text=f"{station['Localidad']} ({station['Provincia']})",
+                tertiary_text=f"{station['Municipio']} ({station['Provincia']})",
             )
             self.root.ids.stationlist.add_widget(item)
 
