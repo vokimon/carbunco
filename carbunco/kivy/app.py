@@ -99,7 +99,7 @@ class CarbuncoApp(App):
             )
             self.root.ids.stationlist.add_widget(item)
 
-    def product_selected(self, i, product):
+    def product_selected(self, product):
         self.root.ids.product_selector.text = product
 
     def open_product_dropdown(self):
@@ -110,16 +110,13 @@ class CarbuncoApp(App):
             items=[
                 dict(
                     text = product,
-                    on_release = partial(self.product_selected, i, product),
+                    on_release = partial(self.product_selected, product),
                 )
-                for i, product in enumerate(self.engine.products)
+                for product in self.engine.products
             ],
         )
         self.menu.open()
 
-
-    def show_products(self):
-        print("showing products")
 
 def app(engine):
     CarbuncoApp(engine=engine).run()
