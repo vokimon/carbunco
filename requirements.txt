@@ -5,3 +5,8 @@ click
 pyside6
 qgmap
 consolemsg
+kivy
+kivymd<2.0
+kivy-garden.mapview
+plotly
+appdirs
