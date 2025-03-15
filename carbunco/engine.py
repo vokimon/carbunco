@@ -29,10 +29,12 @@ class Carbunco:
         self.updateProducts()
 
     def updateProducts(self):
-        self.products =  [
-            key[len('Precio '):]
-            for key in self._stations[-1].keys()
-            if key.startswith('Precio ')
+        lastStation = self._stations[-1]
+        price_prefix = 'Precio '
+        self.products = [
+            key[len(price_prefix):]
+            for key in lastStation.keys()
+            if key.startswith(price_prefix)
         ]
 
     @property
