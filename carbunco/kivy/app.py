@@ -1,6 +1,8 @@
 from kivymd.app import MDApp as App
 from kivymd.uix.datatables import MDDataTable
 from kivymd.uix.textfield import MDTextField
+from kivymd.uix.label import MDLabel
+from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -116,7 +118,23 @@ class CarbuncoApp(App):
         self.menu.open()
 
 
+
+def report(*args):
+    print("===", *args)
+    output = ' '.join(str(x) for x in args)
+    snackbar = MDSnackbar(
+        MDLabel(
+            text=output,
+        ),
+        y=dp(24),
+        pos_hint={"center_x": 0.5},
+        size_hint_x=0.5,
+    )
+    snackbar.open()
+
+
 def app(engine):
+    engine._reporter = report
     CarbuncoApp(engine=engine).run()
  
 
