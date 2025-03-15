@@ -4,10 +4,13 @@ from pathlib import Path
 from yamlns import ns
 import geopy.distance
 from geopy.geocoders import Nominatim as Geocoder
+import geocoder
 import click
 from consolemsg import step, warn, error
 
 
+def default_reporter(*args):
+    print("===", *args)
 
 def float_es(x):
     if not x: return 0
@@ -16,19 +19,32 @@ def float_es(x):
 
 
 class Carbunco:
-    def __init__(self):
+    def __init__(self, reporter=default_reporter):
         self._stations = None
+        self._reporter = reporter
+
+    def report(self, *args):
+        self._reporter(*args)
 
     def download_prices(self):
-        response = requests.get('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/')
+        try:
+            self.report(f"Bajando datos de hoy")
+            response = requests.get('https://sedeaplicaciones.minetur.gob.es/ServiciosRESTCarburantes/PreciosCarburantes/EstacionesTerrestres/')
+        except Exception as e:
+            self.report("Error bajando datos", e)
+            self._stations = []
+            return
         data = response.json()
-        print(data['Nota'])
-        print(data['Fecha'])
-        print(data['ResultadoConsulta'])
+        self.report("Nota:", data['Nota'])
+        self.report("Fecha:", data['Fecha'])
+        self.report(data['ResultadoConsulta'])
         self._stations = data['ListaEESSPrecio']
         self.updateProducts()
 
     def updateProducts(self):
+        if not self._stations:
+            self.products = []
+            return
         lastStation = self._stations[-1]
         price_prefix = 'Precio '
         self.products = [
@@ -37,34 +53,82 @@ class Carbunco:
             if key.startswith(price_prefix)
         ]
 
-    @property
-    def stations(self):
-        if self._stations:
-            return self._stations
+    def _load_cached_today_data(self):
+        self.report(f"Cargando datos guardados de hoy")
+        self._stations = []
+        datafile = self.today_data_file
+        if not datafile.exists():
+            self.report(f"No hay datos guardados de hoy")
+            return
+        self._stations = ns(json.loads(datafile.read_text())).data
+        self.report(f"Cache cargada")
+        return self._stations
 
+    def _load_last_data(self):
+        self.report(f"Cargando cache vieja")
+        self._stations = []
+        datafile = self.last_data_file
+        if not datafile:
+            self.report(f"No hay datos antiguos")
+            return
+        self._stations = ns(json.loads(datafile.read_text())).data
+        self.report(f"Cache cargada")
+        return self._stations
+
+    def _save_today_cache(self):
+        self.data_dir.mkdir(exist_ok=True, parents=True)
+        datafile = self.today_data_file
+        datafile.write_text(json.dumps(ns(data=self._stations)))
+
+    @property
+    def today_data_file(self):
         import datetime
+        today=datetime.date.today()
+        return self.data_dir / f'stations-{today}.json'
+
+    @property
+    def last_data_file(self):
+        availables = list(sorted(self.data_dir.glob('stations-*.json')))
+        return availables[-1] if availables else None
+
+    @property
+    def data_dir(self):
         import appdirs
         author = 'vokimon'
         appname = 'carbunco'
-        datadir = Path(appdirs.user_data_dir(appname, author))
-        today=datetime.date.today()
-        datafile = datadir / f'stations-{today}.yaml'
-        datadir.mkdir(exist_ok=True, parents=True)
-        if datafile.exists():
-            #step(f"Usando datos de {datafile}")
-            self._stations = ns.load(datafile).data
-            self.updateProducts()
-            #step(f"Cache cargada")
-            return self._stations
-        #step("Descargando datos del Ministerio")
+        return Path(appdirs.user_data_dir(appname, author))
+
+    def _load_stations(self):
+        self._load_cached_today_data()
+        if self._stations:
+            return
         self.download_prices()
-        ns(data=self._stations).dump(datafile)
+        if self._stations:
+            self._save_today_cache()
+            return
+        self._load_last_data()
+
+    @property
+    def stations(self):
+        if not self._stations:
+            self._load_stations()
+        self.updateProducts()
         return self._stations
 
     def locate(self, place):
-        geocode = Geocoder(user_agent=__name__).geocode(place)
-        #step(f"Buscando estaciones de servicio baratas cerca de {geocode.address}")
-        return geocode.latitude, geocode.longitude
+        location = None
+        geo = Geocoder(user_agent=__name__)
+        if not place:
+            import geocoder
+            self.report(f"Usando geolocalizacion del dispositivo")
+            location = geocoder.ip('me')
+            location = location and location.latlng
+        else:
+            self.report(f"Geolocalizando \"{place}\"")
+            location = geo.geocode(place)
+            location = location and (location.latitude, location.longitude)
+        self.report("Location:", location)
+        return location
 
     def route(self, from_, to):
         url = f'http://router.project-osrm.org/route/v1/driving/{from_[0]},{from_[1]};{to[0]},{to[1]}?steps=true&overview=simplified'
@@ -126,7 +190,6 @@ class Carbunco:
             ] for brand, prices in prices.items()
         ]
 
-
 def search(place):
     location = 37.166667, -3.15 # Lanteira
     location = 41.69, 2.49 # Sant Celoni
@@ -139,8 +202,13 @@ def search(place):
 
 
     c = Carbunco()
-    c.reloadPrices()
+    c.download_prices()
+    print("searching", place)
     location = c.locate(place)
+    if not location:
+        print("Location not found")
+        return
+
     for station in c.cheapQuest(location, product):
         print(
             f"{station['Distancia']:.0f} km\t"

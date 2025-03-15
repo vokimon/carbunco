@@ -85,8 +85,6 @@ class CarbuncoApp(App):
         search = self.root.ids.address.text
         location = self.engine.locate(search)
         product = self.root.ids.product_selector.text
-        print(dir(self.root))
-        print(self.root.ids)
         self.root.ids.stationlist.clear_widgets()
         for station in reversed(list(self.engine.cheapQuest(
             locations = [location],
