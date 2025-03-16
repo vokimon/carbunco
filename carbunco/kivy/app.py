@@ -16,14 +16,6 @@ from kivy.uix.recyclegridlayout import RecycleGridLayout
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.metrics import dp
 
-columnLabels = dict(
-    distance = "Distancia",
-    price = "Precio",
-    title = "Rótulo",
-    state = "Provincia",
-    city = "Localidad",
-    address = "Dirección",
-)
 
 class StationList(MDDataTable):
     stations = ListProperty([])
@@ -54,10 +46,6 @@ class StationList(MDDataTable):
             sorted_on="Schedule",
             sorted_order="ASC",
             elevation=2,
-            #column_data = [
-            #    (label, dp(6))
-            #    for col, label in columnLabels.items()
-            #],
             **kwds)
 
     def fed_station_data(self, stations):
