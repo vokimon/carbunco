@@ -7,7 +7,7 @@ title = Carbunco
 package.name = carbunco
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = carbunco.canvoki.net
+package.domain = net.canvoki
 
 # (str) Source code where the main.py live
 source.dir = .
