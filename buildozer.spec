@@ -37,7 +37,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,kivymd,kivy-garden.mapview,click,geopy,yamlns,requests,appdirs,PyYAML,certifi,charset-normalizer,click,colorama,consolemsg,decorator,geocoder,geographiclib,ratelim,consolemsg
+requirements = python3,kivy,kivymd,kivy-garden.mapview,click,geopy,yamlns,requests,platformdirs,PyYAML,certifi,charset-normalizer,click,colorama,consolemsg,decorator,geocoder,geographiclib,ratelim,consolemsg
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import requests
 from pathlib import Path
+import json
 from yamlns import ns
 import geopy.distance
 from geopy.geocoders import Nominatim as Geocoder
@@ -93,10 +94,10 @@ class Carbunco:
 
     @property
     def data_dir(self):
-        import appdirs
+        import platformdirs
         author = 'vokimon'
         appname = 'carbunco'
-        return Path(appdirs.user_data_dir(appname, author))
+        return Path(platformdirs.user_data_dir(appname, author, ensure_exists=True))
 
     def _load_stations(self):
         self._load_cached_today_data()
