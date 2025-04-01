@@ -3,7 +3,13 @@ from yamlns import ns
 import click
 from .engine import Carbunco
 
-
+from kivy.utils import platform
+if platform == 'android':
+    from android.permissions import request_permissions, Permission
+    request_permissions([
+        Permission.WRITE_EXTERNAL_STORAGE,
+        Permission.INTERNET,
+    ])
 
 def float_es(x):
     if not x: return 0
